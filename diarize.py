@@ -6,10 +6,11 @@ import whisperx
 import torch
 import librosa
 import soundfile
-from nemo.collections.asr.models.msdd_models import NeuralDiarizer
+#from nemo.collections.asr.models.msdd_models import NeuralDiarizer
 from deepmultilingualpunctuation import PunctuationModel
 import re
 import logging
+import subprocess
 
 mtypes = {'cpu': 'int8', 'cuda': 'float16'}
 
@@ -62,6 +63,12 @@ if args.stemming:
 else:
     vocal_target = args.audio
 
+logging.info("Starting Nemo process with vocal_target: ", vocal_target)
+nemo_process = subprocess.Popen(
+    ["python3", "nemo_process.py", "-a", vocal_target, "--device", args.device],
+    #stdout=subprocess.PIPE,
+    #stderr=subprocess.PIPE,
+)
 
 # Run on GPU with FP16
 whisper_model = WhisperModel(
@@ -108,11 +115,11 @@ os.makedirs(temp_path, exist_ok=True)
 soundfile.write(os.path.join(temp_path, "mono_file.wav"), signal, sample_rate, "PCM_24")
 
 # Initialize NeMo MSDD diarization model
-msdd_model = NeuralDiarizer(cfg=create_config(temp_path)).to(args.device)
-msdd_model.diarize()
+#msdd_model = NeuralDiarizer(cfg=create_config(temp_path)).to(args.device)
+#msdd_model.diarize()
 
-del msdd_model
-torch.cuda.empty_cache()
+#del msdd_model
+#torch.cuda.empty_cache()
 
 # Reading timestamps <> Speaker Labels mapping
 
