@@ -64,11 +64,15 @@ else:
     vocal_target = args.audio
 
 logging.info("Starting Nemo process with vocal_target: ", vocal_target)
-nemo_process = subprocess.Popen(
+# nemo_process = subprocess.Popen(
+#     ["python3", "nemo_process.py", "-a", vocal_target, "--device", args.device],
+#     #stdout=subprocess.PIPE,
+#     #stderr=subprocess.PIPE,
+# )
+
+nemo_process = subprocess.run(
     ["python3", "nemo_process.py", "-a", vocal_target, "--device", args.device],
-    #stdout=subprocess.PIPE,
-    #stderr=subprocess.PIPE,
-)
+    )
 
 # Run on GPU with FP16
 whisper_model = WhisperModel(
@@ -104,7 +108,7 @@ else:
     word_timestamps = []
     for segment in whisper_results:
         for word in segment["words"]:
-            word_timestamps.append({"text": word[2], "start": word[0], "end": word[1]})
+            word_timestamps.append({"word": word[2], "start": word[0], "end": word[1]})
 
 
 # convert audio to mono for NeMo combatibility
