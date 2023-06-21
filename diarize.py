@@ -43,6 +43,12 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+# args = argparse.Namespace(
+#     audio=audio_path,
+#     stemming=stemming,
+#     model_name=model_name,
+#     device='cuda'
+# )
 
 if args.stemming:
     # Isolate vocals from the rest of the audio
